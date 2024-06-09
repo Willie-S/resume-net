@@ -59,11 +59,7 @@ namespace ResuMeAPI.Data
             foreach (var entityEntry in entries)
             {
                 ((BaseEntity)entityEntry.Entity).DateUpdated = DateTime.Now;
-
-                if (entityEntry.State == EntityState.Added)
-                {
-                    ((BaseEntity)entityEntry.Entity).DateCreated = DateTime.Now;
-                }
+                ((BaseEntity)entityEntry.Entity).DateCreated = entityEntry.State == EntityState.Added ? DateTime.Now : ((BaseEntity)entityEntry.Entity).DateCreated;
             }
         }
 
