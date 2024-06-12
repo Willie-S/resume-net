@@ -50,21 +50,21 @@ namespace ResuMeAPI.Controllers
 
         // PUT: api/Profile/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfile(int id, Profile profile)
+        public async Task<IActionResult> PutProfile(int id, UpdateProfileDto profile)
         {
-            if (id != profile.Id)
-            {
-                return BadRequest("The URL query ID and the request body ID does not match");
-            }
-
             return await _dbTransactionService.ExecuteInTransactionAsync(async () =>
             {
-                if (!ProfileExists(id))
+                var existingProfile = await _context.Profiles.FindAsync(id);
+
+                if (existingProfile == null)
                 {
                     return NotFound();
                 }
 
-                _context.Entry(profile).State = EntityState.Modified;
+                existingProfile.FirstName = profile.FirstName ?? existingProfile.FirstName;
+                existingProfile.LastName = profile.LastName ?? existingProfile.LastName;
+                existingProfile.Email = profile.Email ?? existingProfile.Email;
+                existingProfile.Occupation = profile.Occupation ?? existingProfile.Occupation;
 
                 await _context.SaveChangesAsync();
 
