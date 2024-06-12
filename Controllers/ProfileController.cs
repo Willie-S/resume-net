@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ResuMeAPI.Data;
 using ResuMeAPI.Interfaces;
 using ResuMeAPI.Models;
+using ResuMeAPI.Utilities;
 
 namespace ResuMeAPI.Controllers
 {
@@ -61,10 +62,8 @@ namespace ResuMeAPI.Controllers
                     return NotFound();
                 }
 
-                existingProfile.FirstName = profile.FirstName ?? existingProfile.FirstName;
-                existingProfile.LastName = profile.LastName ?? existingProfile.LastName;
-                existingProfile.Email = profile.Email ?? existingProfile.Email;
-                existingProfile.Occupation = profile.Occupation ?? existingProfile.Occupation;
+                // Update only the provided fields
+                EntityHelper.UpdateEntityProperties(profile, existingProfile);
 
                 await _context.SaveChangesAsync();
 
