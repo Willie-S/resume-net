@@ -104,10 +104,5 @@ namespace ResuMeAPI.Controllers
                 return NoContent();
             });
         }
-
-        private bool ProfileExists(int id)
-        {
-            return _context.Profiles.Any(e => e.Id == id);
-        }
     }
 }

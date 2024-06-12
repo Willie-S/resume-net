@@ -14,22 +14,32 @@ namespace ResuMeAPI.Helpers
             _context = context;
         }
 
+        /// <summary>
+        /// Execute DB transactions with error handling and transaction-rollback upon failed executions
+        /// </summary>
+        /// <param name="action">Any DB-related functions that returns an IActionResult object</param>
+        /// <returns>The IActionResult of the provided action</returns>
         public async Task<IActionResult> ExecuteInTransactionAsync(Func<Task<IActionResult>> action)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
+                // Execute the enclosed action
                 var result = await action();
 
+                // Commit any DB transactions
                 await transaction.CommitAsync();
 
+                // Return the result of the executed action upon successful DB transactions
                 return result;
             }
             catch (Exception ex)
             {
+                // Rollback all DB transactions
                 await transaction.RollbackAsync();
 
+                // Return the error
                 var errorResponse = new ErrorResponse
                 {
                     Message = "An error occurred while processing your request.",

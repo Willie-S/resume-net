@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ResuMeAPI.Models;
 
 namespace ResuMeAPI.Data
@@ -23,12 +22,11 @@ namespace ResuMeAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Profile>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Profile>()
-                .HasIndex(p => p.Email)
-                .IsUnique();
+            modelBuilder.Entity<Profile>(e =>
+            {
+                e.HasKey(p => p.Id);
+                e.HasIndex(p => p.Email).IsUnique();
+            });
         }
 
         public override int SaveChanges()
@@ -45,6 +43,9 @@ namespace ResuMeAPI.Data
             return await base.SaveChangesAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Automatically assigns the values to each entity's DateCreated & DateUpdated fields
+        /// </summary>
         private void InterceptSaveChanges()
         {
             var entries = ChangeTracker
