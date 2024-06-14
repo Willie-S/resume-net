@@ -22,6 +22,9 @@ namespace ResuMeAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Specify the DB schema name (or leave out to use the default "dbo" schema)
+            modelBuilder.HasDefaultSchema("resume");
+
             modelBuilder.Entity<Profile>(e =>
             {
                 e.HasKey(p => p.Id);
