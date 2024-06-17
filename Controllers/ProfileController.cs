@@ -20,6 +20,29 @@ namespace ResuMeAPI.Controllers
             _context = context;
             _dbTransactionService = dbTransactionService;
         }
+        
+        // TEST GET: api/Profile/TestAnon
+        [HttpGet("TestAnon")]
+        [AllowAnonymous]
+        public IActionResult TestAnon()
+        {
+            return Ok(new
+            {
+                Id = -1,
+                Name = "Test Anonymous getter successful"
+            });
+        }
+
+        // TEST GET: api/Profile/Test
+        [HttpGet("Test")]
+        public IActionResult Test()
+        {
+            return Ok(new
+            {
+                Id = -2,
+                Name = "Test getter successful"
+            });
+        }
 
         // GET: api/Profile
         [HttpGet]
