@@ -23,7 +23,7 @@ namespace ResuMeAPI
 
             // Register the DB context
             builder.Services.AddDbContext<ResuMeApiDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ResuMeTestDB"))
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ResuMeDB"))
             );
 
             // Register the additional services
