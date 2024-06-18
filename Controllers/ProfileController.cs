@@ -58,6 +58,21 @@ namespace ResuMeAPI.Controllers
             }
         }
 
+        // TEST GET: api/Profile/TestConn
+        [HttpGet("TestConn")]
+        public IActionResult TestConn()
+        {
+            try
+            {
+                var firstProfile = _context.Profiles.FirstOrDefault();
+                return Ok(firstProfile);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ExceptionHelper.AggregateExceptionMessages(ex), title: "Unexpected error occurred");
+            }
+        }
+
         // GET: api/Profile
         [HttpGet]
         public async Task<IActionResult> GetProfiles()
