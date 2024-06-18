@@ -21,9 +21,45 @@ namespace ResuMeAPI.Controllers
             _dbTransactionService = dbTransactionService;
         }
         
+        // TEST GET: api/Profile/TestAnon
+        [HttpGet("TestAnon")]
+        [AllowAnonymous]
+        public IActionResult TestAnon()
+        {
+            try
+            {
+                return Ok(new
+                {
+                    Id = -1,
+                    Name = "Test Anonymous getter successful"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Problem(ExceptionHelper.AggregateExceptionMessages(ex), title: "Unexpected error occurred");
+            }
+        }
+
+        // TEST GET: api/Profile/Test
+        [HttpGet("Test")]
+        public IActionResult Test()
+        {
+            try
+            {
+                return Ok(new
+                {
+                    Id = -2,
+                    Name = "Test Anonymous getter successful"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Problem(ExceptionHelper.AggregateExceptionMessages(ex), title: "Unexpected error occurred");
+            }
+        }
+
         // GET: api/Profile
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetProfiles()
         {
             return await _dbTransactionService.ExecuteInTransactionAsync(async () =>
