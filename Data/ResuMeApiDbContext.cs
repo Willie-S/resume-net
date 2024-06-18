@@ -12,6 +12,7 @@ namespace ResuMeAPI.Data
 
         #region TABLES
 
+        public DbSet<ApiKey> ApiKeys { get; set; }
         public DbSet<Profile> Profiles { get; set; }
 
         #endregion
@@ -24,6 +25,11 @@ namespace ResuMeAPI.Data
 
             // Specify the DB schema name (or leave out to use the default "dbo" schema)
             modelBuilder.HasDefaultSchema("resume");
+
+            modelBuilder.Entity<ApiKey>(e =>
+            {
+                e.HasKey(p => p.Id);
+            });
 
             modelBuilder.Entity<Profile>(e =>
             {

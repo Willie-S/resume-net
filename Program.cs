@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using ResuMeAPI.Authentication;
 using ResuMeAPI.Data;
 using ResuMeAPI.Helpers;
 using ResuMeAPI.Interfaces;
@@ -49,20 +51,50 @@ namespace ResuMeAPI
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(x =>
+            {
+                x.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                {
+                    Name = "x-api-key",
+                    Description = "The API key to secure the application",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Scheme = "ApiKeyScheme"
+                });
+
+                var scheme = new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Reference = new OpenApiReference
+                    {
+                        Id = "ApiKey",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                var requirement = new OpenApiSecurityRequirement
+                {
+                    { scheme, new List<string>() }
+                };
+
+                x.AddSecurityRequirement(requirement);
+            });
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
+            if (app.Environment.IsDevelopment())
+            {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            //}
+            }
 
             app.UseCors(); // Enable CORS globally
 
             app.UseHttpsRedirection();
+
+            // Apply the API key middleware to all the controllers & endpoints
+            app.UseMiddleware<ApiKeyAuthMiddleware>();
 
             app.UseAuthorization();
 
