@@ -12,18 +12,48 @@ using ResuMeAPI.Data;
 namespace ResuMeAPI.Migrations
 {
     [DbContext(typeof(ResuMeApiDbContext))]
-    [Migration("20240609175855_AddTable_Profile")]
-    partial class AddTable_Profile
+    [Migration("20240618093950_Initial_Migration")]
+    partial class Initial_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("resume")
                 .HasAnnotation("ProductVersion", "7.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ResuMeAPI.Models.ApiKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRefreshed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApiKeys", "resume");
+                });
 
             modelBuilder.Entity("ResuMeAPI.Models.Profile", b =>
                 {
@@ -60,7 +90,7 @@ namespace ResuMeAPI.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profiles", "resume");
                 });
 #pragma warning restore 612, 618
         }
